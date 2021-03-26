@@ -9,6 +9,19 @@ import gql from 'graphql-tag'
 //   uri: "https://rickandmortyapi.com/graphql"
 // })
 
+const typeDefs = gql`
+  extend type Pet {
+    vacinated: Boolean!
+  }
+`
+
+const resolvers = { 
+  Pet: {
+    age: () => { return 35},
+    vacinated: () => true
+  }
+}
+
 
 const http = new HttpLink({
   uri: "http://localhost:4000/"
@@ -34,6 +47,8 @@ const cache = new InMemoryCache()
 const client = new ApolloClient({
   cache,
   link,
+  resolvers,
+  typeDefs,
   connectToDevTools: true
 })
 

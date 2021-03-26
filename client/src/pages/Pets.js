@@ -5,27 +5,34 @@ import PetsList from '../components/PetsList'
 import NewPetModal from '../components/NewPetModal'
 import Loader from '../components/Loader'
 
-const ALL_PETS = gql`
-    query AllPets {
-        pets {
+
+const PETS_FIELDS = gql`
+ fragment PetsFields on Pet {
           name
           id
           type
           img
+          age @client
+          vacinated @client
+ }
+`
+
+const ALL_PETS = gql`
+    query AllPets {
+        pets {
+          ...PetsFields
         }
 }
+  ${PETS_FIELDS}
 `
 // need to make sure that items returned in the query and mutattion are the same - for cache  
 const NEW_PET = gql`
     mutation CreateAPet($newPet: NewPetInput!) {
         addPet(input: $newPet) {
-          id
-          name
-          type
-          img
+          ...PetsFields
       }
   }
-
+  ${PETS_FIELDS}
 `
 export default function Pets () {
   const [modal, setModal] = useState(false)
@@ -38,6 +45,8 @@ export default function Pets () {
         id: Math.round(Math.random() * -1000000) + '', 
         type: "DOG",
         img: "https://via.placeholder.com/300", 
+        age: 35,
+        vacinated: true
       }
     }
   })
@@ -70,6 +79,8 @@ export default function Pets () {
           name: input.name,
           id: Math.round(Math.random() * -1000000) + '', 
           type: input.type,
+          age: 35,
+          vacinated: true,
           img: "https://via.placeholder.com/300", 
         }
       }
@@ -85,6 +96,8 @@ export default function Pets () {
   if(error || newPet.error) {
     return <p>error</p>
   }
+
+ 
   
   return (
     <div className="page pets-page">
