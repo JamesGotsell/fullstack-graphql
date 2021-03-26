@@ -1,6 +1,7 @@
 const nanoid = require('nanoid')
 
 const createPetModel = db => {
+  console.log(db)
   return {
     findMany(filter) {
       return db.get('pet')
@@ -23,6 +24,12 @@ const createPetModel = db => {
         .write()
 
       return newPet
+    },
+    delete(id) {
+      console.log(id)
+      const pets = db.get('pets').value()
+      delete pets[id]
+      db.set('pets', pets).value()
     }
   }
 }

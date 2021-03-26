@@ -19,6 +19,12 @@ module.exports = {
     addPet(_, {input}, {models, user}) {
       const pet = models.Pet.create({...input, user: user.id})
       return pet
+    },
+    deletePet(_, {input}) {
+      console.log(input)
+      let ID = parseInt(input.id)
+      const pet = models.Pet.deletePet(ID)
+      return models.Pet.findMany(input || {})
     }
   },
   Pet: {
